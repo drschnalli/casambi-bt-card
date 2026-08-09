@@ -129,7 +129,7 @@ style: minimal
 | `scenes` | list | `[]` | Scene entities to display |
 | `status_entity` | entity | optional | Binary sensor or status entity for online badge |
 | `network_config_entity` | entity | optional | Sensor with `raw_network_data` attributes from the integration |
-| `auto_discover` | boolean | `true` | Try to discover Casambi lights and scenes automatically |
+| `auto_discover` | boolean | `false` | Try to discover Casambi lights and scenes automatically |
 | `show_header` | boolean | `true` | Show header and stats |
 | `show_scenes` | boolean | `true` | Show scenes section |
 | `show_lights` | boolean | `true` | Show lights section |
@@ -138,7 +138,7 @@ style: minimal
 
 ## First Release
 
-Version `0.1.0` focuses on a stable, dependency-free baseline:
+Version `0.1.1` focuses on a stable, dependency-free baseline:
 
 - Lights
 - Scenes
@@ -154,3 +154,26 @@ Planned later:
 - RGB controls
 - Switch event visualization
 - Optional card_mod examples
+
+## v0.1.1
+
+- Fixes entity picker dropdowns closing immediately in the visual editor.
+- Auto-discovery is now disabled by default.
+- Auto-discovery no longer matches raw network names unless `strict_raw_match: true` is set.
+- New optional `light_prefix` and `scene_prefix` filters for strict entity prefixes.
+
+Recommended for Pascal's current Casambi BT setup:
+
+```yaml
+type: custom:casambi-bt-card
+title: Casambi
+style: casambi
+status_entity: binary_sensor.kalli_status
+network_config_entity: sensor.kalli_network_configuration
+lights:
+  - light.minicontroller_casambi_tw
+scenes:
+  - scene.kalli_an
+  - scene.kalli_aus
+  - scene.kalli_testszene
+```

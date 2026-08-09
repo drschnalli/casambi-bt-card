@@ -4,7 +4,7 @@
  * No external dependencies.
  */
 
-const CARD_VERSION = '0.1.0';
+const CARD_VERSION = '0.1.1';
 const CARD_TAG = 'casambi-bt-card';
 const EDITOR_TAG = 'casambi-bt-card-editor';
 
@@ -75,6 +75,10 @@ function discoverEntities(hass, config, type) {
   if (configured.length) return configured;
 
   if (config.auto_discover === false) return [];
+  const prefix = type === 'light' ? config.light_prefix : config.scene_prefix;
+  if (prefix) {
+    return Object.keys(hass.states).filter((entityId) => entityId.startsWith(prefix));
+  }
   const { raw } = getRawNetworkData(hass, config);
   const include = config.include || {};
   const glob = globToRegex(type === 'light' ? include.light_glob : include.scene_glob);
@@ -88,7 +92,7 @@ function discoverEntities(hass, config, type) {
     const haystack = `${stateObj.entity_id} ${stateName(stateObj)}`.toLowerCase();
     const entityMatch = glob ? glob.test(stateObj.entity_id) : false;
     const casambiMatch = haystack.includes('casambi');
-    const rawMatch = nameMatchesNetwork(raw, stateObj, type);
+    const rawMatch = config.strict_raw_match === true ? nameMatchesNetwork(raw, stateObj, type) : false;
     if (entityMatch || casambiMatch || rawMatch) {
       if (!seen.has(stateObj.entity_id)) {
         seen.add(stateObj.entity_id);
@@ -106,14 +110,14 @@ class CasambiBtCard extends HTMLElement {
   static getStubConfig(hass) {
     const lights = Object.keys(hass.states).filter((entityId) => entityId.startsWith('light.')).slice(0, 4);
     const scenes = Object.keys(hass.states).filter((entityId) => entityId.startsWith('scene.')).slice(0, 4);
-    return { title: 'Casambi', auto_discover: true, style: 'casambi', lights, scenes };
+    return { title: 'Casambi', auto_discover: false, style: 'casambi', lights: [], scenes: [] };
   }
 
   setConfig(config) {
     if (!config) throw new Error('Invalid configuration');
     this._config = {
       title: 'Casambi',
-      auto_discover: true,
+      auto_discover: false,
       style: 'casambi',
       show_header: true,
       show_scenes: true,
@@ -339,8 +343,15 @@ class CasambiBtCard extends HTMLElement {
 }
 
 class CasambiBtCardEditor extends HTMLElement {
-  setConfig(config) { this._config = { auto_discover: true, style: 'casambi', ...(config || {}) }; this._render(); }
-  set hass(hass) { this._hass = hass; this._render(); }
+  setConfig(config) { this._config = { auto_discover: false, style: 'casambi', ...(config || {}) }; this._rendered = false; this._render(); }
+  set hass(hass) { this._hass = hass; if (!this._rendered) this._render(); else this._updatePickers(); }
+
+  _updatePickers() {
+    const statusPicker = this.querySelector('#status');
+    const networkPicker = this.querySelector('#networkConfig');
+    if (statusPicker) statusPicker.hass = this._hass;
+    if (networkPicker) networkPicker.hass = this._hass;
+  }
 
   _valueChanged(key, value) {
     const config = { ...this._config, [key]: value };
@@ -371,7 +382,7 @@ class CasambiBtCardEditor extends HTMLElement {
         <div class="row"><label>Stil</label><select id="style">
           ${['casambi','mushroom','bubble','minimal'].map((s) => `<option value="${s}" ${this._config.style === s ? 'selected' : ''}>${s}</option>`).join('')}
         </select></div>
-        <div class="row"><label>Status Entity optional</label><ha-entity-picker id="status" .hass="${''}" value="${this._config.status_entity || this._config.network_entity || ''}" allow-custom-entity></ha-entity-picker></div>
+        <div class="row"><label>Status Entity optional</label><ha-entity-picker id="status" value="${this._config.status_entity || this._config.network_entity || ''}" allow-custom-entity></ha-entity-picker></div>
         <div class="row"><label>Network Config Sensor optional</label><ha-entity-picker id="networkConfig" value="${this._config.network_config_entity || ''}" allow-custom-entity></ha-entity-picker><div class="hint">Optional: Sensor mit raw_network_data Attribut für bessere Auto-Erkennung.</div></div>
         <div class="row"><label>Lichter</label><textarea id="lights" placeholder="light.lampe_1\nlight.lampe_2">${lights.join('\n')}</textarea></div>
         <div class="row"><label>Szenen</label><textarea id="scenes" placeholder="scene.an\nscene.aus">${scenes.join('\n')}</textarea></div>
@@ -389,6 +400,7 @@ class CasambiBtCardEditor extends HTMLElement {
     this.querySelector('#lights').addEventListener('change', (ev) => this._listChanged('lights', ev.target.value));
     this.querySelector('#scenes').addEventListener('change', (ev) => this._listChanged('scenes', ev.target.value));
     this.querySelector('#auto').addEventListener('change', (ev) => this._valueChanged('auto_discover', ev.target.checked));
+    this._rendered = true;
   }
 }
 

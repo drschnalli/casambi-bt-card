@@ -1,6 +1,6 @@
 {
   "name": "casambi-bt-card",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Lovelace card for Casambi Bluetooth Home Assistant entities.",
   "type": "module",
   "files": [
