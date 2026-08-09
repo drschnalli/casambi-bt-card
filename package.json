@@ -1,0 +1,22 @@
+{
+  "name": "casambi-bt-card",
+  "version": "0.1.0",
+  "description": "A Lovelace card for Casambi Bluetooth Home Assistant entities.",
+  "type": "module",
+  "files": [
+    "dist/casambi-bt-card.js"
+  ],
+  "scripts": {
+    "build": "node scripts/copy.js",
+    "lint": "echo \"No build step required\""
+  },
+  "keywords": [
+    "home-assistant",
+    "lovelace",
+    "casambi",
+    "hacs",
+    "custom-card"
+  ],
+  "author": "drschnalli",
+  "license": "MIT"
+}
