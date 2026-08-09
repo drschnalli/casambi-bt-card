@@ -1,5 +1,7 @@
 # Casambi BT Card
 
+v0.1.3 adds a Discovery Assistant with candidate checkboxes, Auto auswählen, Auswahl übernehmen, prefer_available and hide_unavailable_duplicates.
+
 Minimal config:
 
 ```yaml
@@ -8,5 +10,3 @@ title: Casambi
 style: casambi
 network_config_entity: sensor.kalli_network_configuration
 ```
-
-v0.1.2 adds casambi_bt auto-discovery from raw_network_data and avoids Android/Jungle/Hue/Shelly entities.
