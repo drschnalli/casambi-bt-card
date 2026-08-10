@@ -1,0 +1,14 @@
+type: custom:casambi-bt-card
+title: Casambi
+preset: lcars-bars
+layout: wide
+network_config_entity: sensor.kalli_network_configuration
+discovery:
+  strict_casambi_matching: true
+  enabled_sources:
+    - raw_network
+  prefer_available: true
+  hide_unavailable_duplicates: true
+controls:
+  brightness: true
+  color_temp: auto
