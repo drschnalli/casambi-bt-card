@@ -1,16 +1,14 @@
-# Casambi BT Card v0.2.2
+# Casambi BT Card v0.2.3
 
-Hotfix for strict scene discovery: scenes in strict RAW mode now require an exact `scene.<network>_<scene>` entity-id match. This prevents Hue scenes such as `scene.buro_kalli_*` from being treated as RAW Casambi scenes just because the name contains the network name.
+Hotfix for source selection: `name_only` can no longer be active while `strict_casambi_matching` is enabled. This prevents Hue scenes from reappearing when the Name/Network Match source is selected by accident.
 
-Keeps v0.2.1 LCARS compact bars, source group selection and robust visual editor.
-
-## Clean YAML for Casambi BT only
+Recommended Casambi-only YAML:
 
 ```yaml
 type: custom:casambi-bt-card
 title: Casambi
-preset: lcars-bars
-layout: wide
+preset: djungle
+layout: default
 network_config_entity: sensor.kalli_network_configuration
 discovery:
   strict_casambi_matching: true
@@ -18,6 +16,7 @@ discovery:
     - raw_network
   prefer_available: true
   hide_unavailable_duplicates: true
+  show_rejected_candidates: true
 controls:
   brightness: true
   color_temp: auto
