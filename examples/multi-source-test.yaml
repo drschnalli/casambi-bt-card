@@ -1,0 +1,11 @@
+type: custom:casambi-bt-card
+title: Casambi Multi Source Test
+preset: djungle
+network_config_entity: sensor.kalli_network_configuration
+discovery:
+  strict_casambi_matching: false
+  enabled_sources:
+    - raw_network
+    - android_bridge
+    - jungle
+    - name_only

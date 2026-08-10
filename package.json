@@ -1,7 +1,7 @@
 {
   "name": "casambi-bt-card",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "type": "module",
   "license": "MIT",
-  "description": "Casambi Bluetooth Lovelace card with strict discovery, creative presets and card_mod-friendly CSS variables."
+  "description": "Casambi Bluetooth Lovelace card with source groups and improved LCARS-inspired themes."
 }
