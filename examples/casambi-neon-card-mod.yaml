@@ -1,0 +1,13 @@
+type: custom:casambi-bt-card
+title: Casambi
+preset: casambi-neon
+layout: default
+network_config_entity: sensor.kalli_network_configuration
+card_mod:
+  style: |
+    ha-card {
+      --casambi-accent: #00e5ff;
+      --casambi-accent-2: #00ff99;
+      --casambi-card-radius: 28px;
+      --casambi-glow: 0 0 28px rgba(0, 229, 255, 0.45);
+    }

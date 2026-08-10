@@ -1,0 +1,11 @@
+type: custom:casambi-bt-card
+title: Casambi
+preset: bubble-glass
+layout: wide
+network_config_entity: sensor.kalli_network_configuration
+card_mod:
+  style: |
+    ha-card {
+      --casambi-card-radius: 34px;
+      --casambi-panel: rgba(255, 255, 255, 0.14);
+    }

@@ -1,0 +1,13 @@
+type: vertical-stack
+cards:
+  - type: custom:casambi-bt-card
+    title: Casambi
+    preset: casambi-neon
+    layout: default
+    network_config_entity: sensor.kalli_network_configuration
+    discovery:
+      prefer_available: true
+      hide_unavailable_duplicates: true
+    controls:
+      brightness: true
+      color_temp: auto
