@@ -1,23 +1,16 @@
-# Casambi BT Card v0.2.3
+# Casambi BT Card v0.2.5
 
-Hotfix for source selection: `name_only` can no longer be active while `strict_casambi_matching` is enabled. This prevents Hue scenes from reappearing when the Name/Network Match source is selected by accident.
+Adds tuning based on the discovered Casambi Bluetooth entity model.
 
-Recommended Casambi-only YAML:
+Preferred entities:
+- light.minicontroller_casambi_tw
+- binary_sensor.kalli_status
+- scene.kalli_an
+- scene.kalli_aus
+- scene.kalli_testszene
 
-```yaml
-type: custom:casambi-bt-card
-title: Casambi
-preset: djungle
-layout: default
-network_config_entity: sensor.kalli_network_configuration
-discovery:
-  strict_casambi_matching: true
-  enabled_sources:
-    - raw_network
-  prefer_available: true
-  hide_unavailable_duplicates: true
-  show_rejected_candidates: true
-controls:
-  brightness: true
-  color_temp: auto
-```
+Changes:
+- Keeps v0.2.4 segmented LCARS dimmer bars.
+- Discovery documentation aligned with Casambi Bluetooth Revamped.
+- RAW discovery remains the preferred source.
+- Strict mode remains optimized for scene.kalli_* style entities.

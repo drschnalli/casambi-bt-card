@@ -1,5 +1,5 @@
 /* Casambi BT Card v0.1.8 */
-const CARD_VERSION='0.2.3';
+const CARD_VERSION='0.2.5';
 const CARD_TAG='casambi-bt-card';
 const EDITOR_TAG='casambi-bt-card-editor';
 const SOURCES={raw_network:'Casambi BT / RAW Network',android_bridge:'Android Casambi Bridge',jungle:'Casambi Jungle / Direct',name_only:'Name/Network Match'};
@@ -140,6 +140,53 @@ class CasambiBtCard extends HTMLElement{constructor(){super();this._config=cfg()
 .preset-lcars-bars .slider.temp input,.preset-lcars-command .slider.temp input{background:linear-gradient(90deg,#9fa8ff 0 var(--pct,0%),#050505 var(--pct,0%) 100%)}
 .preset-lcars-bars .slider input::-webkit-slider-thumb,.preset-lcars-command .slider input::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:999px;background:#c58cff;border:2px solid #fff6d5;box-shadow:none}.preset-lcars-bars .slider input::-moz-range-thumb,.preset-lcars-command .slider input::-moz-range-thumb{width:16px;height:16px;border-radius:999px;background:#c58cff;border:2px solid #fff6d5;box-shadow:none}.preset-lcars-bars .slider em,.preset-lcars-command .slider em{font-size:10px;color:#fff6d5}
 @media(max-width:560px){.preset-lcars-bars,.preset-lcars-command{padding-left:54px}.preset-lcars-bars:before,.preset-lcars-command:before{width:34px}.preset-lcars-bars .body,.preset-lcars-command .body{grid-template-columns:1fr}.preset-lcars-bars .head,.preset-lcars-command .head{grid-template-columns:1fr}}
+
+
+/* v0.2.4 segmented LCARS dimmer bars */
+.preset-lcars-bars .slider input,.preset-lcars-command .slider input,.preset-lcars .slider input,.preset-lcars-classic .slider input,.preset-lcars-terminal .slider input{
+  -webkit-appearance:none;
+  appearance:none;
+  height:18px;
+  border-radius:999px;
+  outline:none;
+  border:0;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.68) 0 3px, transparent 3px 18px),
+    linear-gradient(90deg, #ffb02e 0 var(--pct,0%), #070707 var(--pct,0%) 100%);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.18), 0 0 0 1px rgba(0,0,0,.55);
+}
+.preset-lcars-bars .slider.temp input,.preset-lcars-command .slider.temp input,.preset-lcars .slider.temp input,.preset-lcars-classic .slider.temp input,.preset-lcars-terminal .slider.temp input{
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.68) 0 3px, transparent 3px 18px),
+    linear-gradient(90deg, #9fa8ff 0 var(--pct,0%), #070707 var(--pct,0%) 100%);
+}
+.preset-lcars-bars .slider input::-webkit-slider-thumb,.preset-lcars-command .slider input::-webkit-slider-thumb,.preset-lcars .slider input::-webkit-slider-thumb,.preset-lcars-classic .slider input::-webkit-slider-thumb,.preset-lcars-terminal .slider input::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  background:#c58cff;
+  border:3px solid #fff6d5;
+  box-shadow:0 0 0 2px #050505;
+}
+.preset-lcars-bars .slider input::-moz-range-thumb,.preset-lcars-command .slider input::-moz-range-thumb,.preset-lcars .slider input::-moz-range-thumb,.preset-lcars-classic .slider input::-moz-range-thumb,.preset-lcars-terminal .slider input::-moz-range-thumb{
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  background:#c58cff;
+  border:3px solid #fff6d5;
+  box-shadow:0 0 0 2px #050505;
+}
+.preset-lcars-bars .slider,.preset-lcars-command .slider,.preset-lcars .slider,.preset-lcars-classic .slider,.preset-lcars-terminal .slider{
+  grid-template-columns:22px 1fr 42px;
+  gap:8px;
+}
+.preset-lcars-bars .slider em,.preset-lcars-command .slider em,.preset-lcars .slider em,.preset-lcars-classic .slider em,.preset-lcars-terminal .slider em{
+  color:#fff6d5;
+  font-size:10px;
+  font-weight:900;
+}
 
 </style>`}}
 class CasambiBtCardEditor extends HTMLElement{constructor(){super();this._config=cfg();this._rendered=false}setConfig(c){this._config=cfg(c);this._rendered=false;this.render()}set hass(h){this._hass=h;if(!this._rendered)this.render();else this.updatePickers()}updatePickers(){['status','networkConfig'].forEach(id=>{let p=this.querySelector('#'+id);if(p)p.hass=this._hass})}emit(){fire(this,'config-changed',{config:this._config})}chg(k,v){this._config=cfg({...this._config,[k]:v});this.emit();this.render()}disc(k,v){this._config=cfg({...this._config,discovery:{...this._config.discovery,[k]:v}});this.emit();this.render()}ctrl(k,v){this._config=cfg({...this._config,controls:{...this._config.controls,[k]:v}});this.emit();this.render()}setSource(s,ck){let cc=cfg(this._config);if(s==='name_only'&&cc.discovery.strict_casambi_matching!==false){this.disc('enabled_sources', enabled(cc));return}let e=[...enabled(cc)].filter(x=>x!=='all');if(ck&&!e.includes(s))e.push(s);if(!ck)e=e.filter(x=>x!==s);if(!e.length)e=['raw_network'];this.disc('enabled_sources',e)}all(){this._config=cfg({...this._config,discovery:{...this._config.discovery,strict_casambi_matching:false,enabled_sources:['raw_network','android_bridge','jungle','name_only']}});this.emit();this.render()}auto(av=false){this._config=cfg({...this._config,lights:selected(this._hass,this._config,'light',av),scenes:selected(this._hass,this._config,'scene',av),discovery_collapsed:true});this.emit();this.render()}apply(){this._config=cfg({...this._config,lights:[...this.querySelectorAll('[data-kind="light"]:checked')].map(x=>x.value),scenes:[...this.querySelectorAll('[data-kind="scene"]:checked')].map(x=>x.value),discovery_collapsed:true});this.emit();this.render()}clean(){this._config=cfg({...this._config,lights:list(this._config.lights).filter(e=>allowedManual(this._hass,this._config,'light',e)),scenes:list(this._config.scenes).filter(e=>allowedManual(this._hass,this._config,'scene',e))});this.emit();this.render()}cands(type){let cc=cfg(this._config),xs=candidates(this._hass,cc,type),sel=new Set(list(cc[type==='light'?'lights':'scenes']));if(!xs.length)return'<p class="hint">Keine Kandidaten gefunden.</p>';return xs.map(x=>{let rec=x.raw_match&&x.available&&sourceAllowed(cc,x),chk=sel.has(x.entity_id)||(!sel.size&&rec);return`<label class="cand ${rec?'rec':'rej'}"><input type="checkbox" data-kind="${type}" value="${x.entity_id}" ${chk?'checked':''}><span><b>${x.name}</b><code>${x.entity_id}</code><small>${rec?'Empfohlen':'Kandidat'} · ${SOURCES[x.source]||x.source} · ${x.raw_match?'RAW Match':'Name only'} · Score ${x.score} · ${x.reason||''}</small></span></label>`}).join('')}render(){if(!this._hass)return;let c=cfg(this._config),d=c.discovery,cs=c.controls,summ=`<div class="summary"><b>Ausgewählt:</b> ${selected(this._hass,c,'light').length} Licht(er), ${selected(this._hass,c,'scene').length} Szene(n) <button id="openDiscovery">Discovery erneut öffnen</button></div>`,disc=c.discovery_collapsed?summ:`<div class="box"><b>Discovery-Assistent</b><label><input id="strict" type="checkbox" ${d.strict_casambi_matching!==false?'checked':''}> Strict RAW Casambi Matching</label><b>Quellen als Ganzes auswählen</b><div class="sourcebox">${Object.entries(SOURCES).map(([k,v])=>{let dis=k==='name_only'&&d.strict_casambi_matching!==false;return `<label class="${dis?'disabled':''}"><input data-source="${k}" type="checkbox" ${enabled(c).includes(k)?'checked':''} ${dis?'disabled':''}> ${v}${dis?' (nur ohne Strict)':''}</label>`}).join('')}</div><div class="actions"><button id="allSources">Alle Casambi-Quellen testen</button><button id="autoBest">Empfohlene auswählen</button><button id="autoAvail">Nur verfügbare auswählen</button><button id="applySel">Auswahl übernehmen</button><button id="cleanSel">Fremde manuelle Einträge entfernen</button></div><b>Licht-Kandidaten</b>${this.cands('light')}<b>Szenen-Kandidaten</b>${this.cands('scene')}</div>`;this.innerHTML=`<div class="ed"><style>.ed{display:grid;gap:14px}.row{display:grid;gap:6px}input,select,textarea{width:100%;box-sizing:border-box;border:1px solid var(--divider-color);border-radius:10px;padding:9px;background:var(--card-background-color);color:var(--primary-text-color)}textarea{min-height:70px;font-family:monospace}.box,.summary{border:1px solid var(--divider-color);border-radius:14px;padding:10px;display:grid;gap:8px}.sourcebox{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px}.sourcebox .disabled{opacity:.45}.cand{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:8px;border-radius:12px;background:rgba(127,127,127,.1)}.cand.rec{border-left:3px solid #1de9b6}.cand.rej{opacity:.6;border-left:3px solid #ff6b6b}.cand b,.cand code,.cand small{display:block}.cand code{font-size:11px;color:var(--secondary-text-color);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button,.summary button{border:0;border-radius:12px;padding:9px 12px;background:#03a9f4;color:white;font-weight:700}</style><div class="row"><label>Titel</label><input id="title" value="${c.title||'Casambi'}"></div><div class="row"><label>Design Preset</label><select id="preset">${PRESETS.map(p=>`<option ${c.preset===p?'selected':''}>${p}</option>`).join('')}</select></div><div class="row"><label>Layout</label><select id="layout">${LAYOUTS.map(p=>`<option ${c.layout===p?'selected':''}>${p}</option>`).join('')}</select></div><div class="row"><label>Status Entity optional</label><ha-entity-picker id="status" value="${c.status_entity||''}" allow-custom-entity></ha-entity-picker></div><div class="row"><label>Network Config Sensor empfohlen</label><ha-entity-picker id="networkConfig" value="${c.network_config_entity||''}" allow-custom-entity></ha-entity-picker></div><div class="box"><b>Controls</b><label><input id="brightness" type="checkbox" ${cs.brightness!==false?'checked':''}> Helligkeits-Slider anzeigen</label><label><input id="temp" type="checkbox" ${cs.color_temp!==false?'checked':''}> Farbtemperatur automatisch anzeigen</label></div>${disc}<div class="row"><label>Lichter manuell</label><textarea id="lights">${list(c.lights).join('\n')}</textarea></div><div class="row"><label>Szenen manuell</label><textarea id="scenes">${list(c.scenes).join('\n')}</textarea></div></div>`;this.updatePickers();this.querySelector('#title').onchange=e=>this.chg('title',e.target.value);this.querySelector('#preset').onchange=e=>this.chg('preset',e.target.value);this.querySelector('#layout').onchange=e=>this.chg('layout',e.target.value);this.querySelector('#status').addEventListener('value-changed',e=>this.chg('status_entity',e.detail.value));this.querySelector('#networkConfig').addEventListener('value-changed',e=>this.chg('network_config_entity',e.detail.value));this.querySelector('#brightness').onchange=e=>this.ctrl('brightness',e.target.checked);this.querySelector('#temp').onchange=e=>this.ctrl('color_temp',e.target.checked?'auto':false);let o=this.querySelector('#openDiscovery');if(o)o.onclick=()=>this.chg('discovery_collapsed',false);let st=this.querySelector('#strict');if(st)st.onchange=e=>{let checked=e.target.checked;let clean=checked?enabled({...this._config,discovery:{...this._config.discovery,strict_casambi_matching:true}}):enabled(this._config);this._config=cfg({...this._config,discovery:{...this._config.discovery,strict_casambi_matching:checked,enabled_sources:clean}});this.emit();this.render()};this.querySelectorAll('[data-source]').forEach(x=>x.onchange=e=>this.setSource(e.target.dataset.source,e.target.checked));let all=this.querySelector('#allSources');if(all)all.onclick=()=>this.all();let ab=this.querySelector('#autoBest');if(ab)ab.onclick=()=>this.auto(false);let av=this.querySelector('#autoAvail');if(av)av.onclick=()=>this.auto(true);let ap=this.querySelector('#applySel');if(ap)ap.onclick=()=>this.apply();let cl=this.querySelector('#cleanSel');if(cl)cl.onclick=()=>this.clean();this.querySelector('#lights').onchange=e=>this.chg('lights',list(e.target.value));this.querySelector('#scenes').onchange=e=>this.chg('scenes',list(e.target.value));this._rendered=true}}

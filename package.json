@@ -1,7 +1,7 @@
 {
   "name": "casambi-bt-card",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "type": "module",
   "license": "MIT",
-  "description": "Casambi Bluetooth Lovelace card with strict source handling, LCARS bar themes and robust editor."
+  "description": "Casambi BT Card tuned for Casambi Bluetooth Revamped entities and LCARS segmented dimmers."
 }
