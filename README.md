@@ -1,3 +1,32 @@
-# Casambi BT Card v0.1.9
+# Casambi BT Card v0.2.0
 
-Hotfix for visual editor initialization errors. Keeps v0.1.8 features: source group selection, LCARS-inspired themes, Djungle theme and strict discovery.
+Adds LCARS long command-bar themes while keeping v0.1.9 hotfixes, source group selection, strict discovery and Djungle/Cyberpunk presets.
+
+## LCARS long-bar example
+
+```yaml
+type: custom:casambi-bt-card
+title: Casambi
+preset: lcars-bars
+layout: wide
+network_config_entity: sensor.kalli_network_configuration
+discovery:
+  strict_casambi_matching: true
+  enabled_sources:
+    - raw_network
+```
+
+## Multi-source test
+
+```yaml
+type: custom:casambi-bt-card
+title: Casambi Multi Source Test
+preset: djungle
+discovery:
+  strict_casambi_matching: false
+  enabled_sources:
+    - raw_network
+    - android_bridge
+    - jungle
+    - name_only
+```

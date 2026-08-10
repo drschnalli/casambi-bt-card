@@ -1,7 +1,7 @@
 {
   "name": "casambi-bt-card",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "type": "module",
   "license": "MIT",
-  "description": "Casambi Bluetooth Lovelace card hotfix: robust editor initialization, source groups and LCARS-inspired themes."
+  "description": "Casambi Bluetooth Lovelace card with LCARS long-bar themes, source groups and robust editor."
 }
