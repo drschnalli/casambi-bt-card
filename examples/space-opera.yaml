@@ -1,0 +1,5 @@
+type: custom:casambi-bt-card
+title: Casambi
+preset: space-opera
+layout: scenes-first
+network_config_entity: sensor.kalli_network_configuration

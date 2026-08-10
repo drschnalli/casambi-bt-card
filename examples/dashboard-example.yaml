@@ -2,10 +2,11 @@ type: vertical-stack
 cards:
   - type: custom:casambi-bt-card
     title: Casambi
-    preset: casambi-neon
+    preset: djungle
     layout: default
     network_config_entity: sensor.kalli_network_configuration
     discovery:
+      strict_casambi_matching: true
       prefer_available: true
       hide_unavailable_duplicates: true
     controls:

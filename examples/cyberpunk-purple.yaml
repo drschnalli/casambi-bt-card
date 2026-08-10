@@ -1,0 +1,5 @@
+type: custom:casambi-bt-card
+title: Casambi
+preset: cyberpunk-purple
+layout: default
+network_config_entity: sensor.kalli_network_configuration
