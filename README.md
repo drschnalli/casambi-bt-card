@@ -1,8 +1,13 @@
-# Casambi BT Card v0.2.0
+# Casambi BT Card v0.2.1
 
-Adds LCARS long command-bar themes while keeping v0.1.9 hotfixes, source group selection, strict discovery and Djungle/Cyberpunk presets.
+Compact LCARS long-bar refinement based on the latest layout sketch.
 
-## LCARS long-bar example
+Changes:
+
+- LCARS bar presets are more compact.
+- Statistics are long LCARS command bars.
+- Brightness and color-temperature sliders use LCARS-style progress bars.
+- v0.2.0 source-group selection and editor hotfixes are retained.
 
 ```yaml
 type: custom:casambi-bt-card
@@ -14,19 +19,4 @@ discovery:
   strict_casambi_matching: true
   enabled_sources:
     - raw_network
-```
-
-## Multi-source test
-
-```yaml
-type: custom:casambi-bt-card
-title: Casambi Multi Source Test
-preset: djungle
-discovery:
-  strict_casambi_matching: false
-  enabled_sources:
-    - raw_network
-    - android_bridge
-    - jungle
-    - name_only
 ```
